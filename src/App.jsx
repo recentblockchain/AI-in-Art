@@ -38,9 +38,9 @@ const MODULES = [
     bg: "rgba(6,182,212,0.06)",
     border: "rgba(6,182,212,0.2)",
     items: [
-      { id: "image-video-lecture", num: "05", type: "Lecture", label: "Image Video Lecture",        Component: ImageVideoLecture },
-      { id: "i2v-lecture",         num: "06", type: "Lecture", label: "Image-to-Video Lecture",     Component: I2VLecture },
-      { id: "lecture8",            num: "07", type: "Lecture", label: "AI Lecture",                 Component: Lecture8 },
+      { id: "image-video-lecture", num: "06", type: "Lecture", label: "Image Video Lecture",        Component: ImageVideoLecture },
+      { id: "i2v-lecture",         num: "07", type: "Lecture", label: "Image-to-Video Lecture",     Component: I2VLecture },
+      { id: "lecture8",            num: "08", type: "Lecture", label: "AI Lecture",                 Component: Lecture8 },
     ],
   },
   {
@@ -51,9 +51,9 @@ const MODULES = [
     bg: "rgba(16,185,129,0.06)",
     border: "rgba(16,185,129,0.2)",
     items: [
-      { id: "data-structures",     num: "08", type: "Lecture", label: "Data Structures Game",       Component: DataStructures },
-      { id: "aim-in-art",          num: "09", type: "Lecture", label: "AI Modularity in Art",       Component: AIMInArt },
-      { id: "ai-modularity",       num: "11", type: "Lecture", label: "AI Modularity",              Component: AIModularity },
+      { id: "data-structures",     num: "09", type: "Lecture", label: "Data Structures Game",       Component: DataStructures },
+      { id: "aim-in-art",          num: "10", type: "Lecture", label: "AI Modularity in Art",       Component: AIMInArt },
+      { id: "ai-modularity",       num: "12", type: "Lecture", label: "AI Modularity",              Component: AIModularity },
     ],
   },
   {
@@ -64,9 +64,9 @@ const MODULES = [
     bg: "rgba(245,158,11,0.06)",
     border: "rgba(245,158,11,0.2)",
     items: [
-      { id: "dataset-exploration", num: "13", type: "Lecture", label: "Dataset Exploration",        Component: DatasetExploration },
-      { id: "dataset-style-app",   num: "02", type: "Lab",     label: "Dataset Style Transfer App", Component: DatasetStyleApp },
-      { id: "data-style-transfer", num: "14", type: "Lecture", label: "Data Style Transfer",        Component: DataStyleTransfer },
+      { id: "dataset-style-app",   num: "03", type: "Lab",     label: "Dataset Style Transfer App", Component: DatasetStyleApp },
+      { id: "dataset-exploration", num: "14", type: "Lecture", label: "Dataset Exploration",        Component: DatasetExploration },
+      { id: "data-style-transfer", num: "15", type: "Lecture", label: "Data Style Transfer",        Component: DataStyleTransfer },
     ],
   },
 ];
