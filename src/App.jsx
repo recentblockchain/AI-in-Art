@@ -232,35 +232,134 @@ function ModuleCard({ mod, onClick }) {
 export default function App() {
   const [active, setActive] = useState(null);
 
+  // Flat ordered list of all items across all modules
+  const ALL_ITEMS = MODULES.flatMap(m =>
+    m.items.map(item => ({ ...item, moduleUnit: m.unit, moduleTitle: m.title, moduleColor: m.color }))
+  );
+
+  const activeIdx = active ? ALL_ITEMS.findIndex(i => i.id === active.id) : -1;
+  const prevItem  = activeIdx > 0 ? ALL_ITEMS[activeIdx - 1] : null;
+  const nextItem  = activeIdx < ALL_ITEMS.length - 1 ? ALL_ITEMS[activeIdx + 1] : null;
+
   if (active) {
     const { Component } = active;
     return (
       <div style={{ minHeight: "100vh", background: WHITE, fontFamily: FONT }}>
-        {/* Back bar */}
+
+        {/* ── Sticky nav bar ── */}
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: "16px",
-          padding: "14px 32px",
+          gap: "10px",
+          padding: "10px 24px",
           borderBottom: `1px solid ${BORDER}`,
           background: WHITE,
           position: "sticky",
           top: 0,
           zIndex: 100,
+          flexWrap: "wrap",
         }}>
+          {/* Back to index */}
           <button
             onClick={() => setActive(null)}
+            title="Back to course index"
             style={{
-              display: "inline-flex", alignItems: "center", gap: "6px",
+              display: "inline-flex", alignItems: "center", gap: "5px",
               background: "none", border: `1px solid ${BORDER}`,
-              color: INK, padding: "7px 16px",
+              color: INK, padding: "6px 14px",
               borderRadius: "8px", cursor: "pointer",
-              fontSize: "13px", fontWeight: 500,
+              fontSize: "13px", fontWeight: 500, whiteSpace: "nowrap",
             }}
           >
-            ← Back to Course
+            ⊞ Course
           </button>
-          <span style={{ fontSize: "14px", color: MUTED }}>{active.label}</span>
+
+          {/* Divider */}
+          <span style={{ color: BORDER, fontSize: "18px", lineHeight: 1 }}>|</span>
+
+          {/* ← Previous */}
+          <button
+            onClick={() => prevItem && setActive(prevItem)}
+            disabled={!prevItem}
+            title={prevItem ? `← ${prevItem.label}` : "No previous item"}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "6px",
+              background: prevItem ? `${active.moduleColor}10` : "#f9fafb",
+              border: `1px solid ${prevItem ? active.moduleColor + "40" : BORDER}`,
+              color: prevItem ? INK : "#c0c0c0",
+              padding: "6px 14px",
+              borderRadius: "8px",
+              cursor: prevItem ? "pointer" : "not-allowed",
+              fontSize: "13px", fontWeight: 500, whiteSpace: "nowrap",
+              transition: "background 0.15s, border-color 0.15s",
+            }}
+          >
+            ← {prevItem ? (
+              <span>
+                <span style={{ fontSize: "10px", color: MUTED, marginRight: "4px" }}>{prevItem.moduleUnit}</span>
+                {prevItem.label}
+              </span>
+            ) : "No previous"}
+          </button>
+
+          {/* Current breadcrumb */}
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "1px", padding: "0 6px" }}>
+            <span style={{
+              fontSize: "10px", fontWeight: 700, textTransform: "uppercase",
+              letterSpacing: "0.12em", color: active.moduleColor,
+            }}>
+              {active.moduleUnit} · {active.moduleTitle}
+            </span>
+            <span style={{
+              fontSize: "14px", fontWeight: 600, color: INK,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {active.label}
+            </span>
+          </div>
+
+          {/* → Next */}
+          <button
+            onClick={() => nextItem && setActive(nextItem)}
+            disabled={!nextItem}
+            title={nextItem ? `→ ${nextItem.label}` : "No next item"}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "6px",
+              background: nextItem ? `${active.moduleColor}10` : "#f9fafb",
+              border: `1px solid ${nextItem ? active.moduleColor + "40" : BORDER}`,
+              color: nextItem ? INK : "#c0c0c0",
+              padding: "6px 14px",
+              borderRadius: "8px",
+              cursor: nextItem ? "pointer" : "not-allowed",
+              fontSize: "13px", fontWeight: 500, whiteSpace: "nowrap",
+              transition: "background 0.15s, border-color 0.15s",
+            }}
+          >
+            {nextItem ? (
+              <span>
+                <span style={{ fontSize: "10px", color: MUTED, marginRight: "4px" }}>{nextItem.moduleUnit}</span>
+                {nextItem.label}
+              </span>
+            ) : "No next"} →
+          </button>
+
+          {/* Progress indicator */}
+          <span style={{
+            fontSize: "11px", color: MUTED, whiteSpace: "nowrap",
+            background: "#f3f4f6", padding: "4px 10px", borderRadius: "20px",
+          }}>
+            {activeIdx + 1} / {ALL_ITEMS.length}
+          </span>
+        </div>
+
+        {/* ── Progress bar ── */}
+        <div style={{ height: "3px", background: "#f3f4f6" }}>
+          <div style={{
+            height: "100%",
+            width: `${((activeIdx + 1) / ALL_ITEMS.length) * 100}%`,
+            background: active.moduleColor,
+            transition: "width 0.3s ease",
+          }} />
         </div>
 
         <Suspense fallback={
@@ -270,6 +369,63 @@ export default function App() {
         }>
           <Component />
         </Suspense>
+
+        {/* ── Bottom nav ── */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "24px 32px",
+          borderTop: `1px solid ${BORDER}`,
+          background: "#fafafa",
+          gap: "12px",
+          flexWrap: "wrap",
+        }}>
+          <button
+            onClick={() => prevItem && setActive(prevItem)}
+            disabled={!prevItem}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "8px",
+              background: prevItem ? WHITE : "#f9fafb",
+              border: `1px solid ${prevItem ? BORDER : "#f3f4f6"}`,
+              color: prevItem ? INK : "#c0c0c0",
+              padding: "10px 20px", borderRadius: "10px",
+              cursor: prevItem ? "pointer" : "not-allowed",
+              fontSize: "14px", fontWeight: 500,
+              boxShadow: prevItem ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+            }}
+          >
+            ← {prevItem ? prevItem.label : "Beginning"}
+          </button>
+
+          <button
+            onClick={() => setActive(null)}
+            style={{
+              background: "none", border: "none",
+              color: MUTED, fontSize: "13px", cursor: "pointer",
+              textDecoration: "underline",
+            }}
+          >
+            Back to course index
+          </button>
+
+          <button
+            onClick={() => nextItem && setActive(nextItem)}
+            disabled={!nextItem}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "8px",
+              background: nextItem ? active.moduleColor : "#f9fafb",
+              border: `1px solid ${nextItem ? active.moduleColor : "#f3f4f6"}`,
+              color: nextItem ? WHITE : "#c0c0c0",
+              padding: "10px 20px", borderRadius: "10px",
+              cursor: nextItem ? "pointer" : "not-allowed",
+              fontSize: "14px", fontWeight: 600,
+              boxShadow: nextItem ? `0 2px 8px ${active.moduleColor}50` : "none",
+            }}
+          >
+            {nextItem ? nextItem.label : "End"} →
+          </button>
+        </div>
       </div>
     );
   }
